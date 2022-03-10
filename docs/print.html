@@ -83,7 +83,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">简介</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="freedesktop/introduction.html">freedesktop.org</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div>软件</div></li><li class="chapter-item "><div>规范</div></li><li class="chapter-item "><div>其他</div></li></ol></li><li class="chapter-item expanded "><a href="systemd/index.html">systemd</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="systemd/introduction.html">简介</a></li></ol></li><li class="chapter-item expanded "><a href="environment_variables/index.html">环境变量</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="environment_variables/common_variables.html">常见环境变量</a></li></ol></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">简介</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="freedesktop/introduction.html">freedesktop.org</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div>软件</div></li><li class="chapter-item "><div>规范</div></li><li class="chapter-item "><div>其他</div></li></ol></li><li class="chapter-item expanded "><a href="systemd/index.html">systemd</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="systemd/introduction.html">简介</a></li></ol></li><li class="chapter-item expanded "><a href="environment_variables/index.html">环境变量</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="environment_variables/common_variables.html">常见环境变量</a></li></ol></li><li class="chapter-item expanded "><a href="op/index.html">常用操作</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="op/view_port_occupancy.html">查看端口占用</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="op/view_port_lsof.html">lsof</a></li><li class="chapter-item "><a href="op/view_port_netstat.html">netstat</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="mac/index.html">MAC常用操作</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div></div></li></ol></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -355,6 +355,62 @@ ARGC=0
 <li><code>BASH_VERSION</code> Bash Shell的版本号</li>
 <li><code>BASH</code> Bash Shell的全路径</li>
 </ol>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="常用操作"><a class="header" href="#常用操作">常用操作</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="查看端口占用"><a class="header" href="#查看端口占用">查看端口占用</a></h1>
+<ul>
+<li><a href="op/../op/view_port_lsof.html">lsof</a> : (list open files)是一个列出当前系统打开文件的工具。</li>
+<li><a href="op/../op/view_port_netstat.html">netstat</a> : 用于显示 <code>tcp</code>，<code>udp</code> 的端口和进程等相关情况。</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="lsof"><a class="header" href="#lsof">lsof</a></h1>
+<p>更多参考: <a href="https://www.yiibai.com/linux/lsof.html">https://www.yiibai.com/linux/lsof.html</a></p>
+<p><strong>lsof</strong> (list open files)是一个列出当前系统打开文件的工具。</p>
+<p><strong>lsof</strong> 查看端口占用语法格式：</p>
+<pre><code class="language-shell">lsof -i:port
+</code></pre>
+<p><strong>实例:</strong></p>
+<p>查看服务器 <code>8000</code> 端口的占用情况：</p>
+<pre><code class="language-python"># lsof -i:8000
+COMMAND   PID USER   FD   TYPE   DEVICE SIZE/OFF NODE NAME
+nodejs  26993 root   10u  IPv4 37999514      0t0  TCP *:8000 (LISTEN)
+# 可以看到 8000 端口已经被轻 nodejs 服务占用。
+</code></pre>
+<p><code>lsof -i</code> 需要 <code>root</code> 用户的权限来执行，如下图：</p>
+<p><img src="op/../images/lsof.png" alt="lsof" /></p>
+<p>更多 <code>lsof</code> 的命令如下：</p>
+<ul>
+<li><strong>lsof -i:8080</strong>：查看<code>8080</code>端口占用</li>
+<li><strong>lsof abc.txt</strong>：显示开启文件<code>abc.txt</code>的进程</li>
+<li><strong>lsof -c abc</strong>：显示<code>abc</code>进程现在打开的文件</li>
+<li><strong>lsof -c -p 1234</strong>：列出进程号为<code>1234</code>的进程所打开的文件</li>
+<li><strong>lsof -g gid</strong>：显示归属<code>gid</code>的进程情况</li>
+<li><strong>lsof +d /usr/local/</strong>：显示目录下被进程开启的文件</li>
+<li><strong>lsof +D /usr/local/</strong>：同上，但是会搜索目录下的目录，时间较长</li>
+<li><strong>lsof -d 4</strong>：显示使用<code>fd</code>为<code>4</code>的进程</li>
+<li><strong>lsof -i -U</strong>：显示所有打开的端口和<code>UNIX domain</code>文件</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="netstat"><a class="header" href="#netstat">netstat</a></h1>
+<p>更多参考: <a href="https://www.yiibai.com/linux/netstat.html">https://www.yiibai.com/linux/netstat.html</a></p>
+<p><code>netstat -tunlp</code> 用于显示 <code>tcp</code>，<code>udp</code> 的端口和进程等相关情况。</p>
+<p><code>netstat</code> 查看端口占用语法格式：</p>
+<pre><code class="language-shell">netstat -tunlp | grep 端口号
+</code></pre>
+<ul>
+<li><code>-t</code> (tcp) 仅显示tcp相关选项</li>
+<li><code>-u</code> (udp)仅显示udp相关选项</li>
+<li><code>-n</code> 拒绝显示别名，能显示数字的全部转化为数字</li>
+<li><code>-l</code> 仅列出在Listen(监听)的服务状态</li>
+<li><code>-p</code> 显示建立相关链接的程序名</li>
+</ul>
+<p>例如查看 <code>8000</code> 端口的情况，使用以下命令：</p>
+<pre><code class="language-shell"># netstat -tunlp | grep 8000
+tcp        0      0 0.0.0.0:8000            0.0.0.0:*               LISTEN      26993/nodejs   
+</code></pre>
+<p>更多命令：</p>
+<pre><code class="language-python">netstat -ntlp   // 查看当前所有tcp端口
+netstat -ntulp | grep 80   // 查看所有80端口使用情况
+netstat -ntulp | grep 3306   // 查看所有3306端口使用情况
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="mac常用操作"><a class="header" href="#mac常用操作">MAC常用操作</a></h1>
 
                     </main>
 
@@ -373,6 +429,20 @@ ARGC=0
 
         </div>
 
+                <!-- Livereload script (if served using the cli tool) -->
+        <script type="text/javascript">
+            var socket = new WebSocket("ws://localhost:3000/__livereload");
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
         
         
         
