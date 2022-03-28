@@ -16,5 +16,6 @@
   - [查看端口占用](./op/view_port_occupancy.md)
     - [lsof](./op/view_port_lsof.md)
     - [netstat](./op/view_port_netstat.md)
+    - [firewall-cmd](./op/view_port_firwalld.md)
 - [MAC常用操作](./mac/index.md)
   - []()

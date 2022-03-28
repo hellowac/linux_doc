@@ -83,7 +83,7 @@
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
             <div class="sidebar-scrollbox">
-                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">简介</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="freedesktop/introduction.html">freedesktop.org</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div>软件</div></li><li class="chapter-item "><div>规范</div></li><li class="chapter-item "><div>其他</div></li></ol></li><li class="chapter-item expanded "><a href="systemd/index.html">systemd</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="systemd/introduction.html">简介</a></li></ol></li><li class="chapter-item expanded "><a href="environment_variables/index.html">环境变量</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="environment_variables/common_variables.html">常见环境变量</a></li></ol></li><li class="chapter-item expanded "><a href="op/index.html">常用操作</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="op/view_port_occupancy.html">查看端口占用</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="op/view_port_lsof.html">lsof</a></li><li class="chapter-item "><a href="op/view_port_netstat.html">netstat</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="mac/index.html">MAC常用操作</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div></div></li></ol></li></ol>            </div>
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">简介</a></li><li class="spacer"></li><li class="chapter-item expanded "><a href="freedesktop/introduction.html">freedesktop.org</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div>软件</div></li><li class="chapter-item "><div>规范</div></li><li class="chapter-item "><div>其他</div></li></ol></li><li class="chapter-item expanded "><a href="systemd/index.html">systemd</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="systemd/introduction.html">简介</a></li></ol></li><li class="chapter-item expanded "><a href="environment_variables/index.html">环境变量</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="environment_variables/common_variables.html">常见环境变量</a></li></ol></li><li class="chapter-item expanded "><a href="op/index.html">常用操作</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="op/view_port_occupancy.html">查看端口占用</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="op/view_port_lsof.html">lsof</a></li><li class="chapter-item "><a href="op/view_port_netstat.html">netstat</a></li><li class="chapter-item "><a href="op/view_port_firwalld.html">firewall-cmd</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="mac/index.html">MAC常用操作</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><div></div></li></ol></li></ol>            </div>
             <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
         </nav>
 
@@ -409,6 +409,43 @@ tcp        0      0 0.0.0.0:8000            0.0.0.0:*               LISTEN      
 <pre><code class="language-python">netstat -ntlp   // 查看当前所有tcp端口
 netstat -ntulp | grep 80   // 查看所有80端口使用情况
 netstat -ntulp | grep 3306   // 查看所有3306端口使用情况
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="firewall-cmd"><a class="header" href="#firewall-cmd">firewall-cmd</a></h1>
+<p>linux开放指定端口命令</p>
+<h2 id="方式一"><a class="header" href="#方式一">方式一</a></h2>
+<ol>
+<li>
+<p>开启防火墙</p>
+<p><code>systemctl start firewalld</code></p>
+</li>
+<li>
+<p>开放指定端口</p>
+<p><code>firewall-cmd --zone=public --add-port=1935/tcp --permanent</code></p>
+<p>命令含义：</p>
+<pre><code class="language-shell">`--zone` #作用域
+`--add-port=1935/tcp`  #添加端口，格式为：端口/通讯协议
+`--permanent`  #永久生效，没有此参数重启后失效
+</code></pre>
+</li>
+<li>
+<p>重启防火墙</p>
+<p><code>firewall-cmd --reload</code></p>
+</li>
+<li>
+<p>查看端口号</p>
+<p><code>netstat -ntlp</code>   //查看当前所有tcp端口·</p>
+<p><code>netstat -ntulp |grep 1935</code>   //查看所有1935端口使用情况·</p>
+</li>
+</ol>
+<h2 id="方式二"><a class="header" href="#方式二">方式二</a></h2>
+<pre><code class="language-shell"># 开放端口:8080
+
+/sbin/iptables -I INPUT -p tcp --dport 8080 -j ACCEPT
+</code></pre>
+<h2 id="方式三"><a class="header" href="#方式三">方式三</a></h2>
+<pre><code class="language-shell">-A INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT
+
+service iptables restart
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="mac常用操作"><a class="header" href="#mac常用操作">MAC常用操作</a></h1>
 
